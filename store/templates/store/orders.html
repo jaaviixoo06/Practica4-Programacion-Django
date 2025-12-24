@@ -1,0 +1,22 @@
+{% extends 'store/base.html' %}
+{% block content %}
+<h1>Mis pedidos</h1>
+{% if orders %}
+  <div class="list-group">
+    {% for order in orders %}
+      <div class="list-group-item">
+        <h5>Pedido {{ order.id }} - {{ order.get_status_display }}</h5>
+        <p>Fecha: {{ order.created_at }}</p>
+        <p>Total: {{ order.total }} €</p>
+        <ul>
+          {% for it in order.items.all %}
+            <li>{{ it.quantity }} x {{ it.product.name }} - {{ it.price }} €</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No tienes pedidos todavía.</p>
+{% endif %}
+{% endblock %}

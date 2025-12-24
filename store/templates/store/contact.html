@@ -1,0 +1,98 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="contact-hero mb-5 shadow-sm rounded overflow-hidden position-relative">
+    <div class="overlay"></div>
+    <div class="hero-content text-center text-white position-relative" style="z-index: 2;">
+        <h1 class="fw-bold display-4">Estamos aquí para ayudarte</h1>
+        <p class="lead">¿Tienes dudas? Contáctanos y te responderemos lo antes posible.</p>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        
+        <div class="alert alert-warning d-flex align-items-center shadow-sm border-0 mb-5" role="alert">
+            <div class="fs-1 me-3 text-warning">
+                <i class="fa-solid fa-robot"></i>
+            </div>
+            <div>
+                <h5 class="alert-heading fw-bold mb-1">¿Necesitas una respuesta rápida?</h5>
+                <p class="mb-0">
+                    Antes de rellenar el formulario, te recomendamos usar nuestro <strong>Chatbot</strong> (icono dorado abajo a la derecha). 
+                    ¡Puede resolver la mayoría de tus dudas sobre envíos y pagos al instante!
+                </p>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-lg mb-5">
+            <div class="card-header bg-dark text-white text-center py-3">
+                <h4 class="mb-0"><i class="fa-solid fa-envelope me-2"></i> Envíanos un mensaje</h4>
+            </div>
+            <div class="card-body p-4 p-md-5">
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Nombre Completo</label>
+                            {{ form.name }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Teléfono</label>
+                            {{ form.phone }}
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Correo Electrónico</label>
+                            {{ form.email }}
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Motivo de la consulta</label>
+                            {{ form.subject }}
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Descripción del problema</label>
+                            {{ form.message }}
+                            <div class="form-text text-end">Máximo 500 palabras/caracteres.</div>
+                        </div>
+
+                        <div class="col-12 mt-4 d-grid">
+                            <button type="submit" class="btn btn-dark btn-lg">
+                                Enviar Mensaje <i class="fa-solid fa-paper-plane ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .contact-hero {
+	background-image: url("{% static 'store/image/fondo.png' %}");
+        background-size: cover;
+        background-position: center;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+	position: relative;
+    }
+    .contact-hero .overlay {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Oscurece la foto un 50% */
+    }
+</style>
+
+{% endblock %}

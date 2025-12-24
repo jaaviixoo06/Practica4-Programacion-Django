@@ -1,0 +1,323 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Artesanía Cristiana</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { font-family: "Segoe UI", Tahoma, sans-serif; background-color: #f9f9f9; color: #333; }
+        a { text-decoration: none; }
+        
+        /* HEADER ESTILOS */
+        .top-bar { background-color: #222; color: #fff; font-size: 0.8rem; padding: 8px 0; }
+        .top-bar a { color: #ddd; margin-left: 20px; transition: color 0.3s; }
+        .top-bar a:hover { color: #fff; }
+
+        .header-main { background-color: #fff; padding: 25px 0; text-align: center; }
+        .site-logo { font-size: 2.2rem; font-weight: 700; color: #111; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* MENU ESTILOS */
+        .main-menu { background-color: #fff; border-top: 1px solid #eaeaea; border-bottom: 1px solid #eaeaea; box-shadow: 0 4px 6px -6px rgba(0,0,0,0.1); }
+        .menu-list { list-style: none; padding: 0; margin: 0; display: flex; justify-content: center; flex-wrap: wrap; }
+        .menu-list li { margin: 0 15px; }
+        .menu-list a { display: block; padding: 15px 5px; font-size: 0.95rem; font-weight: 600; color: #555; text-transform: uppercase; transition: all 0.3s; border-bottom: 2px solid transparent; }
+        .menu-list a:hover { color: #d1ad58; border-bottom: 2px solid #d1ad58; }
+
+        /* ICONO CARRITO */
+        .cart-icon-wrapper { position: relative; display: inline-block; }
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -12px;
+            font-size: 0.7rem;
+            padding: 0.25em 0.5em;
+            border-radius: 50%;
+        }
+
+        footer { background-color: #212529; color: white; padding: 20px 0; margin-top: 40px; }
+    </style>
+
+    <style>
+        /* Botón flotante para abrir el chat */
+        .chat-trigger-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #d1ad58; /* Color dorado */
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 60px;
+            font-size: 24px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 9999;
+            transition: transform 0.3s;
+        }
+        .chat-trigger-btn:hover { transform: scale(1.1); }
+
+        /* Contenedor principal del chat */
+        .chat-window {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 500px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 9999;
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        /* Cabecera del chat */
+        .chat-header {
+            background-color: #222;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+        }
+        .chat-close { cursor: pointer; font-size: 1.2rem; }
+
+        /* Cuerpo donde aparecen los mensajes */
+        .chat-body {
+            flex: 1; /* Ocupa el espacio restante */
+            padding: 20px;
+            overflow-y: auto; /* Scroll si hay muchos mensajes */
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Estilos de los mensajes (burbujas) */
+        .message { max-width: 80%; padding: 10px 15px; border-radius: 15px; font-size: 0.9rem; line-height: 1.4; }
+        .bot-message { align-self: flex-start; background-color: #e9ecef; color: #333; border-bottom-left-radius: 2px; }
+        .user-message { align-self: flex-end; background-color: #d1ad58; color: white; border-bottom-right-radius: 2px; }
+
+        /* Pie del chat donde están las opciones */
+        .chat-footer {
+            padding: 15px;
+            background-color: white;
+            border-top: 1px solid #eee;
+        }
+        /* Contenedor de los botones de opciones */
+        .chat-options-container { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .chat-option-btn {
+            background-color: white;
+            border: 1px solid #d1ad58;
+            color: #d1ad58;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .chat-option-btn:hover { background-color: #d1ad58; color: white; }
+        
+        /* Animación de "escribiendo..." */
+        .typing-indicator { color: #888; font-style: italic; font-size: 0.8rem; margin-left: 10px; display: none;}
+    </style>
+  </head>
+
+  <body>
+
+    <header>
+        <div class="top-bar">
+            <div class="container d-flex justify-content-end align-items-center">
+                
+                <a href="{% url 'store:cart' %}" class="cart-icon-wrapper me-3">
+                    <i class="fa-solid fa-cart-shopping fa-lg"></i>
+                    {% if cart_count and cart_count > 0 %}
+                        <span class="badge bg-danger cart-badge">{{ cart_count }}</span>
+                    {% endif %}
+                </a>
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'store:orders' %}">Mis pedidos</a>
+                    <a href="/admin/">Admin</a>
+                {% else %}
+                    <a href="/admin/login/?next=/admin/">Acceder</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="header-main">
+            <div class="container">
+                <a href="{% url 'store:home' %}" class="site-logo">Artesanía Cristiana</a>
+            </div>
+        </div>
+
+        <nav class="main-menu">
+            <div class="container">
+                <ul class="menu-list">
+                    <li><a href="{% url 'store:home' %}">INICIO</a></li>
+                    <li><a href="{% url 'store:product_list' %}">TIENDA</a></li>
+                    <li><a href="{% url 'store:contact' %}">CONTACTO</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container mt-3">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="container my-5">
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>
+        <div class="container text-center">
+            <p>&copy; 2025 Maranata — Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <div class="chat-trigger-btn" id="chatTrigger">
+        <i class="fa-solid fa-comments"></i>
+    </div>
+
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <span>Asistente Maranata</span>
+            <span class="chat-close" id="chatClose"><i class="fa-solid fa-xmark"></i></span>
+        </div>
+        
+        <div class="chat-body" id="chatBody">
+            <div class="message bot-message">
+                ¡Hola! 👋 Bienvenido a Maranata. Soy tu asistente virtual. ¿En qué puedo ayudarte hoy?
+            </div>
+            <div class="typing-indicator" id="typingIndicator">Escribiendo...</div>
+        </div>
+        
+        <div class="chat-footer">
+            <div class="chat-options-container" id="chatOptions">
+                </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const chatTrigger = document.getElementById('chatTrigger');
+            const chatWindow = document.getElementById('chatWindow');
+            const chatClose = document.getElementById('chatClose');
+            const chatBody = document.getElementById('chatBody');
+            const chatOptions = document.getElementById('chatOptions');
+            const typingIndicator = document.getElementById('typingIndicator');
+
+            let isChatOpen = false;
+
+            // --- CONFIGURACIÓN DE PREGUNTAS Y RESPUESTAS ---
+            // Puedes añadir más opciones aquí fácilmente.
+            const faqData = [
+                {
+                    question: "¿Cuánto tardan los envíos?",
+                    answer: "Nuestros productos son artesanales. Los preparamos en 1-2 días y el envío suele tardar 48/72h laborables en la península."
+                },
+                {
+                    question: "¿Son productos hechos a mano?",
+                    answer: "¡Sí, al 100%! Cada rosario, pulsera y vela está elaborada a mano con mucha dedicación y oración."
+                },
+                {
+                    question: "¿Qué métodos de pago aceptáis?",
+                    answer: "Aceptamos pagos seguros mediante tarjeta de crédito/débito. Estamos trabajando para implementar más opciones pronto."
+                },
+                {
+                    question: "¿Hacéis encargos personalizados?",
+                    answer: "Por ahora trabajamos con el catálogo de la tienda, pero si tienes una idea para un evento especial, escríbenos en la sección de Contacto."
+                }
+            ];
+
+            // --- FUNCIONES DEL CHAT ---
+
+            // 1. Abrir/Cerrar el chat
+            function toggleChat() {
+                isChatOpen = !isChatOpen;
+                chatWindow.style.display = isChatOpen ? 'flex' : 'none';
+                if (isChatOpen) {
+                    scrollToBottom();
+                    // Si es la primera vez que se abre y no hay opciones, las cargamos
+                    if (chatOptions.children.length === 0) {
+                        showOptions();
+                    }
+                }
+            }
+
+            // 2. Añadir un mensaje al chat (del bot o del usuario)
+            function addMessage(text, sender) {
+                const msgDiv = document.createElement('div');
+                msgDiv.classList.add('message', sender === 'bot' ? 'bot-message' : 'user-message');
+                msgDiv.innerText = text;
+                // Insertamos antes del indicador de "escribiendo..."
+                chatBody.insertBefore(msgDiv, typingIndicator);
+                scrollToBottom();
+            }
+
+            // 3. Mostrar los botones de opciones
+            function showOptions() {
+                chatOptions.innerHTML = ''; // Limpiar opciones anteriores
+                faqData.forEach(item => {
+                    const btn = document.createElement('button');
+                    btn.classList.add('chat-option-btn');
+                    btn.innerText = item.question;
+                    btn.onclick = () => handleOptionClick(item);
+                    chatOptions.appendChild(btn);
+                });
+            }
+
+            // 4. Manejar el clic en una opción
+            function handleOptionClick(item) {
+                // a) Añadir la pregunta del usuario
+                addMessage(item.question, 'user');
+                
+                // b) Ocultar opciones temporalmente
+                chatOptions.innerHTML = ''; 
+                
+                // c) Mostrar "escribiendo..."
+                typingIndicator.style.display = 'block';
+                scrollToBottom();
+
+                // d) Simular retraso de respuesta (1.5 segundos)
+                setTimeout(() => {
+                    typingIndicator.style.display = 'none';
+                    // e) Añadir respuesta del bot
+                    addMessage(item.answer, 'bot');
+                    // f) Volver a mostrar las opciones
+                    showOptions();
+                }, 1500);
+            }
+
+            // 5. Hacer scroll hasta abajo
+            function scrollToBottom() {
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+
+            // --- EVENT LISTENERS ---
+            chatTrigger.addEventListener('click', toggleChat);
+            chatClose.addEventListener('click', toggleChat);
+        });
+    </script>
+
+  </body>
+</html>

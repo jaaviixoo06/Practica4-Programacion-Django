@@ -2,7 +2,7 @@
 **Práctica 4 – Programación Web con Django**
 
 
-## 0 Video Funcionalidad
+## 0. Video Funcionalidad
 
 https://www.loom.com/share/0ad93f5ddb1145b883a794f592822309
 

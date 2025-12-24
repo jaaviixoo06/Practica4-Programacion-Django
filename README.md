@@ -59,9 +59,105 @@ Las principales entidades del sistema son:
 
 ---
 
-## 4. Desarrollo Técnico de Funcionalidades
+## 4. Documentación de las funcionalidades implementadas
 
-### 4.1 Gestión Dinámica del Carrito de Compras
+### 4.1️ Modelos de datos (Models)
+
+El sistema se apoya en varios modelos principales que representan las entidades fundamentales de la aplicación:
+
+Seller: representa al vendedor o responsable del servicio, asociado a un usuario de Django.
+
+Customer: representa al cliente que realiza compras en la tienda.
+
+Product: representa los artículos disponibles en la tienda.
+Incluye información como nombre, descripción, precio, stock, categoría, imagen y un slug para generar URLs amigables.
+
+Order: representa un pedido realizado por un cliente, incluyendo su estado (pendiente, procesado, enviado, etc.), el total y la fecha de creación.
+
+OrderItem: representa cada producto incluido dentro de un pedido, almacenando cantidad y precio en el momento de la compra.
+
+Estos modelos están relacionados mediante claves externas (ForeignKey), permitiendo reflejar correctamente las relaciones cliente–pedido y pedido–productos.
+
+
+### 4.2️ Vistas (Views)
+
+Las vistas implementadas siguen el patrón MVT de Django y se encargan de gestionar la lógica del backend:
+
+home: muestra la página principal con información general del proyecto.
+
+product_list: consulta la base de datos y muestra el catálogo completo de productos disponibles.
+
+product_detail: muestra el detalle de un producto concreto, incluyendo imagen, descripción, precio, categoría y stock.
+
+add_to_cart / remove_from_cart: permiten añadir y eliminar productos del carrito de compra.
+
+cart_view: muestra el contenido actual del carrito.
+
+checkout: gestiona la finalización de la compra y la creación del pedido.
+
+orders_view: permite al cliente consultar el estado de sus pedidos realizados.
+
+contact_view: muestra un formulario de contacto básico.
+
+Todas las vistas realizan consultas dinámicas a la base de datos y envían la información necesaria a los templates HTML.
+
+### 4.3️ Rutas y navegación (URLs)
+
+El archivo urls.py define rutas claras y semánticas para la aplicación:
+
+/ → Página de inicio
+
+/tienda/ → Catálogo de productos
+
+/product/<slug>/ → Detalle de un producto
+
+/cart/ → Carrito de compra
+
+/checkout/ → Finalización del pedido
+
+/orders/ → Consulta de pedidos del cliente
+
+El uso de slugs mejora la legibilidad de las URLs y la experiencia de usuario.
+
+### 4️.4 Templates HTML
+
+Los templates están desarrollados utilizando HTML y Bootstrap 5 para garantizar un diseño responsive y moderno.
+
+Ejemplo de funcionalidades implementadas en los templates:
+
+Visualización dinámica de productos desde la base de datos.
+
+Página de detalle de producto con imagen, precio, categoría y stock.
+
+Botón de “Añadir al carrito” conectado a la lógica del backend.
+
+Plantillas reutilizables mediante herencia (base.html).
+
+Esto permite separar claramente la lógica de presentación del resto de la aplicación.
+
+### 4.5️ Administración de Django (Admin)
+
+El panel de administración de Django ha sido configurado para facilitar la gestión del sistema:
+
+Gestión completa de vendedores (Seller).
+
+Alta, modificación y eliminación de clientes (Customer).
+
+Gestión de productos (Product) con generación automática de slug.
+
+Administración de pedidos (Order) con:
+
+Filtro por estado y fecha.
+
+Visualización de los productos incluidos en cada pedido mediante inlines.
+
+Esto permite a los responsables del sistema realizar operaciones CRUD de forma sencilla sin necesidad de acceder al código.
+
+---
+
+## 5. Desarrollo Técnico de Funcionalidades
+
+### 5.1 Gestión Dinámica del Carrito de Compras
 
 El carrito de compras se implementa utilizando **Django Sessions**, evitando la creación de registros permanentes en la base de datos hasta que el pedido se confirma.
 
@@ -79,7 +175,7 @@ En la plantilla (cart.html) se utiliza lógica condicional para mostrar el estad
 ```
 Este enfoque permite una gestión eficiente y escalable del carrito.
 
-### 4.2 Chatbot de Asistencia “Maranata”
+### 5.2 Chatbot de Asistencia “Maranata”
 
 Se ha desarrollado un chatbot de atención al cliente integrado en base.html, implementado íntegramente en JavaScript, sin necesidad de backend adicional.
 
@@ -101,7 +197,7 @@ function handleOptionClick(item) {
 
 ```
 
-### 4.3 Efecto Visual: Lluvia de Cruces
+### 5.3 Efecto Visual: Lluvia de Cruces
 
 Para reforzar la identidad visual del sitio, se implementa un efecto animado en la vista de listado de productos.
 
@@ -113,7 +209,7 @@ Animaciones CSS3 usando @keyframes para traslación vertical y rotación.
 
 Este efecto aporta dinamismo sin afectar significativamente al rendimiento.
 
-### 4.4 Gestión de Formularios y Contacto
+### 5.4 Gestión de Formularios y Contacto
 
 El sistema diferencia claramente entre formularios de negocio y formularios informativos:
 
@@ -126,7 +222,7 @@ En la vista de contacto se muestra un aviso recomendando el uso previo del chatb
 
 ---
 
-# 5. Diseño Responsive y Estilos
+# 6. Diseño Responsive y Estilos
 
 La interfaz utiliza Bootstrap 5.3 como base visual.
 
@@ -138,7 +234,7 @@ La interfaz utiliza Bootstrap 5.3 como base visual.
 
 ---
 
-# 6. Tecnologías Utilizadas
+# 7. Tecnologías Utilizadas
 
 Python 3
 
@@ -154,6 +250,6 @@ SQLite (entorno de desarrollo)
 
 ---
 
-# 7. Conclusión
+# 8. Conclusión
 
 El proyecto Artesanía Cristiana combina una arquitectura web sólida con una identidad visual cuidada y una clara orientación social. La aplicación demuestra el uso práctico del framework Django para el desarrollo de plataformas web completas, integrando funcionalidades dinámicas, diseño responsive y una experiencia de usuario coherente.

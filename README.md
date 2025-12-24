@@ -1,6 +1,11 @@
 # Artesanía Cristiana  
 **Práctica 4 – Programación Web con Django**
 
+
+## 0 Video Funcionalidad
+
+https://www.loom.com/share/0ad93f5ddb1145b883a794f592822309
+
 ## 1. Introducción
 
 **Artesanía Cristiana** es una plataforma web desarrollada con Django que combina un sistema de comercio electrónico con una dimensión social y comunitaria. El proyecto no se concibe únicamente como una tienda online, sino como una herramienta de apoyo a la Iglesia y a la juventud, facilitando la recaudación de fondos para misiones, retiros y convivencias.
